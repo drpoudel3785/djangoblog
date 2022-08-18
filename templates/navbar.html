@@ -1,0 +1,12 @@
+<a href="/">home</a> | 
+<a href="/admin/">Admin</a> |
+<a href="{% url 'allcategory' %}">All Category</a> |
+<a href="{% url 'allpost' %}">All Post</a> |
+{% if user.is_authenticated %}
+    Hello, {{user.first_name }}
+    <a href="{% url 'lgt' %}">Logout</a>|
+{% else %}
+<a href="{% url 'register' %}">Register</a>|
+<a href="{% url 'login' %}">Login</a>|
+{% endif %}
+<hr/>

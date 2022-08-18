@@ -1,0 +1,44 @@
+{% extends '../template.html'  %}
+{% load static %}
+{% block content %}
+<div>
+    {% for pinfo in post   %}
+
+    <h2>{{ pinfo.heading }}</h2>
+    <hr/>
+    <p>
+        {{ pinfo.details }}
+    </p>
+
+    <img src="/{{pinfo.featureimage}}" alt="{{pinfo.heading}}" title="{{pinfo.heading}}" class="rounded img-thumbnail img-fluid" />
+    
+    {% endfor %}
+
+</div>
+
+<div>
+    <h2>Post your Comments</h2>
+    {% if user.is_authenticated %}
+    Userid  = {{ user.id }}
+
+    <input type="hidden" value="{{ postid }}" name="post_id"/>
+
+    <input type="hidden" value="{{ user.id }}" name="user_id"/>
+    
+   
+    html form will be ehere
+{% else %}
+
+<a href="{% url 'login' %}">Login</a>
+{% endif %}
+
+</div><div>
+
+    <h2>Comments for this post</h2>
+    {% for cmt in allcomment   %}
+    <p>{{ cmt.cmt }}</p>
+    <p>{{ cmt.createdate }}</p>
+    <hr/>
+    {% endfor %}
+</div>
+{% endblock content %}

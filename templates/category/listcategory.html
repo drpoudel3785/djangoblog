@@ -1,0 +1,17 @@
+{% extends '../template.html'  %}
+
+{% block content %}
+<h1>Welcome to the site </h1>
+<div>
+    <ul style="list-style-type:none">
+    {% for ap in cat %}
+        <li>
+            <a href="{% url 'postdetails' %}?id={{ ap.id  }}">
+                {{ ap }} 
+            </a> 
+        </li>
+        <hr/>
+    {% endfor %}
+    </ul>
+</div>
+{% endblock content %}

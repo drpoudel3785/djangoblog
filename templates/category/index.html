@@ -1,0 +1,15 @@
+{% extends '../template.html'  %}
+{% load static %}
+
+{% block content %}
+
+<h1>Welcome to the site </h1>
+
+{% for ac in allcategory %}
+<a href="{% url 'categorylist' %}?id={{ ac.id  }}"> {{ ac }} </a>
+{% endfor %}
+
+<img src="{% static 'images/banner.jpg' %}"/>
+
+
+{% endblock content %}
