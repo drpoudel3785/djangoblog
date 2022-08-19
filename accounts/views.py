@@ -1,6 +1,9 @@
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.auth.models import User, auth
+from email.message import EmailMessage
+import ssl 
+import smtplib
 
 # Create your views here.
 def logout(request):
@@ -44,7 +47,25 @@ def register(request):
                 last_name=last_name)
                 user.save()
                 print("User Created")
-               
+                email_sender = "dharmarajpoudel@gmail.com"
+                email_password = ""
+
+                email_receiver = email
+                subject = "User Registration Success";
+                body = """
+  THis is test body message
+
+"""
+                em = EmailMessage()
+                em['From'] = email_sender
+                em['To'] = email
+                em['subject'] = subject
+                em.set_content(body)
+                #temp-mail.org
+                context  = ssl.create_default_context()
+                with smtplib.SMTP_SSL("smtp.gmail.com", 465, context = context) as smtp:
+                    smtp.login(email_sender, email_password)
+                    smtp.sendmail(email_sender, email_receiver, em.as_string())      
         else:
             print("Password not Match")
         return redirect('/')

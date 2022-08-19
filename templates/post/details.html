@@ -19,21 +19,27 @@
 <div>
     <h2>Post your Comments</h2>
     {% if user.is_authenticated %}
-    Userid  = {{ user.id }}
-
-    <input type="hidden" value="{{ postid }}" name="post_id"/>
-
-    <input type="hidden" value="{{ user.id }}" name="user_id"/>
-    
-   
-    html form will be ehere
+    {% for cmtmessage in messages %}
+        {{ cmtmessage }}
+        {% endfor %}
+        <form action = "/comments/add/" method="post">
+        {% csrf_token %}
+        <input type="text" readonly name="post_id" value="{{ postid }}"/><br/>
+        <input type="hidden"  name="user_id" value="{{ user.id }}"/><br/>
+        <textarea rows="5" cols="50" name="cmt"/>
+        </textarea>
+        <br/>
+        <input type="submit" name="Submit" value="Post Comments"/>
+        <input type="reset" name="Reset" value="Cancel"/>
+    </form>
 {% else %}
-
+<p>For adding a commnet you have to login first.</p>
+<p>Only Login Users can post the comments.</p>
 <a href="{% url 'login' %}">Login</a>
 {% endif %}
 
-</div><div>
-
+</div>
+<div>
     <h2>Comments for this post</h2>
     {% for cmt in allcomment   %}
     <p>{{ cmt.cmt }}</p>
