@@ -40,20 +40,24 @@ def register(request):
                 messages.info(request, 'Username Taken')
                 print("Username Taken")
             elif User.objects.filter(email=email).exists():
+                messages.info(request, 'Email Taken')
                 print("Email Taken")
             else:
                 user = User.objects.create_user(username=username, 
                 password=password1, email=email, first_name=first_name, 
                 last_name=last_name)
                 user.save()
+                lid = User.objects.latest('id')
                 print("User Created")
                 email_sender = "dharmarajpoudel@gmail.com"
-                email_password = ""
+                email_password = "zlptgjwgewgrkylz"
 
                 email_receiver = email
                 subject = "User Registration Success";
                 body = """
-  THis is test body message
+  <h1>Welcome to the Site</h1>
+  <p>THis is test body message</p>
+  <a href='https://localhost:8000/verify/?id="""+ str(lid.id)+ """'>Verify</a>
 
 """
                 em = EmailMessage()
@@ -61,6 +65,7 @@ def register(request):
                 em['To'] = email
                 em['subject'] = subject
                 em.set_content(body)
+                em.set_type('text/html')
                 #temp-mail.org
                 context  = ssl.create_default_context()
                 with smtplib.SMTP_SSL("smtp.gmail.com", 465, context = context) as smtp:

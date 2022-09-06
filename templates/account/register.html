@@ -4,6 +4,9 @@
 {% block content %}
 <h1>Registration </h1>
 <div>
+    {% for message in messages %}
+        {{ message }}
+        {% endfor %}
     <form actions = "register" method="post">
         {% csrf_token %}
         <input type="text" name="first_name" placeholder="First Name" /><br/>
