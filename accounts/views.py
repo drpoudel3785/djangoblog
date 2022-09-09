@@ -1,9 +1,18 @@
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.auth.models import User, auth
 from email.message import EmailMessage
 import ssl 
 import smtplib
+from .models import tbl_Employee
+import datetime as dt
+import pandas as pd
+import os
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+import csv
+import uuid
 
 # Create your views here.
 def logout(request):
@@ -79,3 +88,60 @@ def register(request):
 
 
 # Create your views here.
+
+
+ 
+def Import_csv(request):
+    print('s')               
+    try:
+        if request.method == 'POST' and request.FILES['myfile']:
+          
+            myfile = request.FILES['myfile']        
+            fs = FileSystemStorage()
+            filename = fs.save(myfile.name, myfile)
+            uploaded_file_url = fs.url(filename)
+            excel_file = uploaded_file_url
+            
+            print(excel_file) 
+            #empexceldata = pd.read_csv("."+excel_file, header = 0, encoding='unicode_escape', on_bad_lines='skip')
+            empexceldata = pd.read_excel("."+excel_file)
+            print(type(empexceldata))
+            dbframes = empexceldata
+          
+            for dbframe in dbframes.itertuples():
+                print(dbframe) 
+                print(dbframe.DOB)
+                print(dbframe.Empcode)
+                fromdate_time_obj = dt.datetime.strptime(dbframe.DOB, '%d-%m-%Y')
+                obj = tbl_Employee.objects.create(Empcode=dbframe.Empcode,firstName=dbframe.firstName, middleName=dbframe.middleName,
+                                                lastName=dbframe.lastName, email=dbframe.email, phoneNo=dbframe.phoneNo, address=dbframe.address, 
+                                                exprience=dbframe.exprience, gender=dbframe.gender, DOB=fromdate_time_obj,
+                                                #DOB = dbframe.DOB,
+                                                qualification=dbframe.qualification)
+                print(type(obj))
+                obj.save()
+ 
+            return render(request, 'account/importexcel.html', {
+                'uploaded_file_url': uploaded_file_url
+            })    
+    except Exception as identifier:            
+        print(identifier)
+     
+    return render(request, 'account/importexcel.html',{})
+def export_users_csv(request):
+    if request.method == 'POST':
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = f"attachment; filename=EmployeeData{uuid.uuid4()}.csv"       
+        writer = csv.writer(response)
+        writer.writerow(['Employee Detail'])       
+                 
+         
+        writer.writerow(['Employee Code','Employee Name','Relation Name','Last Name','gender','DOB','e-mail','Contact No' ,'Address' ,'exprience','Qualification'])
+ 
+        users = tbl_Employee.objects.all().values_list('Empcode','firstName' , 'middleName' , 'lastName','gender','DOB','email','phoneNo' ,'address','exprience','qualification')
+         
+        for user in users:
+            writer.writerow(user)
+        return response
+ 
+    return render(request, 'account/exportexcel.html')

@@ -2,6 +2,12 @@
 <a href="/admin/">Admin</a> |
 <a href="{% url 'allcategory' %}">All Category</a> |
 <a href="{% url 'allpost' %}">All Post</a> |
+<a href="{% url 'Import_csv' %}">Import CSV</a> |
+<a href="{% url 'export_users_csv' %}">Export CSV</a> |
+
+
+
+
 {% if user.is_authenticated %}
     Hello, {{user.first_name }}
     <a href="{% url 'lgt' %}">Logout</a>|

@@ -42,7 +42,10 @@ INSTALLED_APPS = [
     'post.apps.PostConfig',
     'accounts.apps.AccountsConfig',
     'comment.apps.CommentConfig',
+    'crispy_forms',
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
